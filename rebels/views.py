@@ -11,7 +11,7 @@ s = sat.Sato(0, '')
 
 
 @csrf_exempt
-def getpositionandmessage(request):
+def get_position_and_message(request):
     try:
         content = json.loads(request.body)
         satellites = content['satellites']
@@ -28,8 +28,8 @@ def getpositionandmessage(request):
                 s.message = satellite['message']
 
         messages = {'Kenobi': k.message, 'Skywalker': w.message, 'Sato': s.message}
-        x, y = ops.getLocation(k, w, s)
-        response = ops.createresponse(x, y, ops.getMessage(messages))
+        x, y = ops.get_location(k, w, s)
+        response = ops.create_response(x, y, ops.get_message(messages))
         return HttpResponse(json.dumps(response))
     except:
         return HttpResponseNotFound('Error 404')

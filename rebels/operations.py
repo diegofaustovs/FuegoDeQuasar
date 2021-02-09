@@ -1,15 +1,15 @@
-def getLocation(k, w, s):
+def get_location(k, w, s):
     return 1, 2
 
 
-def getMessage(messages):
+def get_message(messages):
     if len(messages['Kenobi']) != len(messages['Skywalker']) or len(messages['Kenobi']) != len(messages['Sato']):
-        k, w, s = normalizeVectorsLength(messages['Kenobi'], messages['Skywalker'], messages['Sato'])
-        return retrieveMessage(k, w, s)
-    return retrieveMessage(messages['Kenobi'], messages['Skywalker'], messages['Sato'])
+        k, w, s = normalize_vectors_length(messages['Kenobi'], messages['Skywalker'], messages['Sato'])
+        return retrieve_message(k, w, s)
+    return retrieve_message(messages['Kenobi'], messages['Skywalker'], messages['Sato'])
 
 
-def messageAtPosition(kb, sw, st):
+def message_at_position(kb, sw, st):
     out = kb
     if kb == "":
         if sw != "":
@@ -19,33 +19,33 @@ def messageAtPosition(kb, sw, st):
     return out
 
 
-def normalizeVectorsLength(k, w, s):
+def normalize_vectors_length(k, w, s):
     normal = max(len(k), len(w), len(s))
     if len(k) < normal:
-        k = normalizeVector(k, normal)
+        k = normalize_vector(k, normal)
     if len(w) < normal:
-        w = normalizeVector(w, normal)
+        w = normalize_vector(w, normal)
     if len(s) < normal:
-        s = normalizeVector(s, normal)
+        s = normalize_vector(s, normal)
     return k, w, s
 
 
-def normalizeVector(v, length):
+def normalize_vector(v, length):
     v = v + [""] * (length - len(v))
     return v
 
 
-def retrieveMessage(kenobi, skywalker, sato):
+def retrieve_message(kenobi, skywalker, sato):
     message = []
     for i in range(len(kenobi)):
-        message.insert(i, messageAtPosition(kenobi[i], skywalker[i], sato[i]))
+        message.insert(i, message_at_position(kenobi[i], skywalker[i], sato[i]))
     if '' in message:
         print(message)
         raise Exception("Can't retrieve message")
     return ' '.join(message)
 
 
-def createresponse(x, y, message):
+def create_response(x, y, message):
     return {
         'position': {
             'x': x,
