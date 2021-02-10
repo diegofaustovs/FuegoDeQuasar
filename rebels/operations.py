@@ -1,5 +1,9 @@
+import rebels.trilateration as trilat
+import rebels.msg_decode as decode
+
+
 def get_location(k, w, s):
-    return 1, 2
+    return trilat.calculate_location(k, w, s)
 
 
 def get_message(messages):

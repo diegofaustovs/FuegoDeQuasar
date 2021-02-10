@@ -1,4 +1,5 @@
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseServerError, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, \
+    HttpResponseServerError, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
@@ -35,12 +36,29 @@ def get_position_and_message(request):
         return HttpResponseNotFound('Error 404')
 
 
-def index(request):
-    print(w)
-    try:
-        return HttpResponse(str(w))
-    except:
-        return HttpResponseServerError()
+@csrf_exempt
+def get_position_and_message_split(request, satellite):
+    if request.method == 'POST':
+        try:
+            if satellite == 'Kenobi':
+                return JsonResponse({"Kenobi": satellite})
+            if satellite == 'Skywalker':
+                return JsonResponse({"Skywalker": satellite})
+            if satellite == 'Sato':
+                return JsonResponse({"Sato": satellite})
+            else:
+                raise Exception()
+        except:
+            return HttpResponseNotFound('Not enough information')
+    else:
+        return HttpResponseBadRequest('Invalid Method')
+
+
+def retrieve_position_and_message(request):
+    if request.method == 'GET':
+        return HttpResponse('GET Method')
+    else:
+        return HttpResponseBadRequest('Invalid Method')
 
 
 def err(request):
