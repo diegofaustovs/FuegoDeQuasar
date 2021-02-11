@@ -28,38 +28,48 @@ def get_position_and_message(request):
                 s.distance = satellite['distance']
                 s.message = satellite['message']
 
-        messages = {'Kenobi': k.message, 'Skywalker': w.message, 'Sato': s.message}
         x, y = ops.get_location(k, w, s)
-        response = ops.create_response(x, y, ops.get_message(messages))
+        message = ops.get_message(k.message, w.message, s.message)
+        response = ops.create_response(x, y, message)
         return HttpResponse(json.dumps(response))
     except:
-        return HttpResponseNotFound('Error 404')
+        return HttpResponseNotFound('Unable to find location or message')
 
 
 @csrf_exempt
 def get_position_and_message_split(request, satellite):
     if request.method == 'POST':
-        try:
-            if satellite == 'Kenobi':
-                return JsonResponse({"Kenobi": satellite})
-            if satellite == 'Skywalker':
-                return JsonResponse({"Skywalker": satellite})
-            if satellite == 'Sato':
-                return JsonResponse({"Sato": satellite})
-            else:
-                raise Exception()
-        except:
-            return HttpResponseNotFound('Not enough information')
+        content = json.loads(request.body)
+        if satellite == 'Kenobi':
+            k.distance = content['distance']
+            k.message = content['message']
+            return HttpResponse(k)
+        if satellite == 'Skywalker':
+            w.distance = content['distance']
+            w.message = content['message']
+            return HttpResponse(w)
+        if satellite == 'Sato':
+            s.distance = content['distance']
+            s.message = content['message']
+            return HttpResponse(s)
+        else:
+            return HttpResponseBadRequest('Invalid Method')
     else:
         return HttpResponseBadRequest('Invalid Method')
 
 
 def retrieve_position_and_message(request):
     if request.method == 'GET':
-        return HttpResponse('GET Method')
+        try:
+            x, y = ops.get_location(k, w, s)
+            message = ops.get_message(k.message, w.message, s.message)
+            response = ops.create_response(x, y, message)
+            return HttpResponse(json.dumps(response))
+        except:
+            return HttpResponseServerError('Unable to find location or message')
     else:
         return HttpResponseBadRequest('Invalid Method')
 
 
-def err(request):
-    return JsonResponse({'Kenobi': 'X=' + str(sat.Kenobi.x) + " Y=" + str(sat.Kenobi.y)})
+def dump_satellite_data(request):
+    return HttpResponse('%s %s %s' % (repr(k), repr(w), repr(s)))
